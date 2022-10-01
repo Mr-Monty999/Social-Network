@@ -16,3 +16,22 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+/// Guests Routes ///
+Route::resource("login", "LoginController");
+Route::post("/login/attempt", "LoginController@login");
+
+Route::resource("register", "RegisterController");
+
+
+
+/// Users Routes ///
+Route::group(["middleware" => "auth"], function () {
+    /// Posts Routes ///
+    Route::resource("posts", "PostController");
+
+
+    /// Profiles Routes ///
+    Route::resource("profiles", "ProfileController");
+});
