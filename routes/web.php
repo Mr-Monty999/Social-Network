@@ -28,7 +28,7 @@ Route::group(["namespace" => "guests"], function () {
 
 
 /// Users Routes ///
-Route::group(["middleware" => "auth"], function () {
+Route::group(["middleware" => "auth", "namespace" => "users"], function () {
     /// Posts Routes ///
     Route::resource("posts", "PostController");
 
