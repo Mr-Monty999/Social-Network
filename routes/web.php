@@ -19,11 +19,12 @@ Route::get('/', function () {
 
 
 /// Guests Routes ///
-Route::resource("login", "LoginController");
-Route::post("/login/attempt", "LoginController@login");
+Route::group(["namespace" => "guests"], function () {
+    Route::get("/login", "LoginController@index");
+    Route::post("/login/attempt", "LoginController@login");
 
-Route::resource("register", "RegisterController");
-
+    Route::resource("register", "RegisterController");
+});
 
 
 /// Users Routes ///
