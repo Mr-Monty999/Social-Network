@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
+use App\Services\FileHandleService;
+use App\Services\PostService;
+use App\Services\ResponseService;
 
 class PostController extends Controller
 {
@@ -16,8 +19,10 @@ class PostController extends Controller
      */
     public function index()
     {
+        $posts = PostService::getAllPosts();
 
-        //
+        // return ResponseService::json($posts);
+        return view("welcome", compact("posts"));
     }
 
     /**
@@ -38,7 +43,13 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        //
+        $data = $request->all();
+        if ($request->file("photo"))
+            $data["photo"] = FileHandleService::uploadImage($request->file("photo"), "/images/posts");
+
+        $post = Post::create($data);
+
+        return ResponseService::json($post);
     }
 
     /**
@@ -47,9 +58,10 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post)
+    public function show($id)
     {
-        //
+        $post = PostService::getPostById($id);
+        return view("welcome", compact("post"));
     }
 
     /**
@@ -58,9 +70,11 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function edit(Post $post)
+    public function edit($id)
     {
-        //
+        $post = PostService::getPostById($id);
+
+        return view("welcome", compact("post"));
     }
 
     /**
@@ -72,7 +86,15 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        //
+        $data = $request->all();
+        if ($request->file("photo")) {
+            if (FileHandleService::deleteImageIfExists($post->photo))
+                $data["photo"] = FileHandleService::uploadImage($request->file("photo"), "/images/posts");
+        }
+
+        $post->update($data);
+
+        return ResponseService::json($post, "تم تحديث المنشور بنجاح");
     }
 
     /**
@@ -81,8 +103,11 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
+    public function destroy($id)
     {
-        //
+        $post = Post::findOrfail($id);
+        FileHandleService::deleteImageIfExists($post->photo);
+        $post->delete();
+        return ResponseService::json($post, "تم الحذف بنجاح");
     }
 }

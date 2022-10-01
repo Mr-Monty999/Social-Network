@@ -5,6 +5,7 @@ namespace App\Http\Controllers\guests;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterUserRequest;
 use App\Services\ResponseService;
+use App\Services\UserSerivce;
 use Illuminate\Http\Request;
 
 class RegisterController extends Controller
@@ -37,7 +38,11 @@ class RegisterController extends Controller
      */
     public function store(RegisterUserRequest $request)
     {
-        ResponseService::json($request->all());
+
+        $data = UserSerivce::register($request->all());
+        UserSerivce::login($request->all());
+
+        return ResponseService::json($data, "تم التسجيل بنجاح");
     }
 
     /**

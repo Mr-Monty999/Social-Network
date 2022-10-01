@@ -15,8 +15,16 @@ class Profile extends Model
     {
         return $this->hasMany(Post::class);
     }
-    public function User()
+    public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function followings()
+    {
+        return $this->belongsToMany(Profile::class, "profile_follow", "profile1_id", "profile2_id")->withTimestamps();
+    }
+    public function followers()
+    {
+        return $this->belongsToMany(Profile::class, "profile_follow", "profile2_id", "profile1_id")->withTimestamps();
     }
 }

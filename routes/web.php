@@ -35,4 +35,5 @@ Route::group(["middleware" => "auth", "namespace" => "users"], function () {
 
     /// Profiles Routes ///
     Route::resource("profiles", "ProfileController");
+    Route::get("/profiles/username/{username}", "ProfileController@showProfileByUsername")->name("profile.show.username");
 });
