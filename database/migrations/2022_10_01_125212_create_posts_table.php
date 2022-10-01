@@ -15,7 +15,12 @@ class CreatePostsTable extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
+            $table->longText("content");
+            $table->string("photo", 255)->nullable();
+            $table->bigInteger("profile_id")->unsigned();
             $table->timestamps();
+
+            $table->foreign("profile_id")->references("id")->on("profiles")->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 
