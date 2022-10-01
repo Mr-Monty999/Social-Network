@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 /**
- * Class UserSerivce.
+ * Class UserService.
  */
-class UserSerivce
+class UserService
 {
 
     public static function register($data)

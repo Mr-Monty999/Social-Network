@@ -23,7 +23,7 @@ class ProfileService
     public static function getProfileWithRelationsByUsername($username)
     {
 
-        $profile = User::where("username", "=", $username)->profile->with("posts")->get();
+        $profile = User::where("username", "=", $username)->first()->profile->with("posts")->get();
         return $profile;
     }
 }
